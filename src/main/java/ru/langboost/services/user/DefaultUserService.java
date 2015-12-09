@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.langboost.domain.EntityRepository;
 import ru.langboost.domain.user.*;
 import ru.langboost.services.AbstractService;
+import ru.langboost.services.ServiceException;
 
 import javax.inject.Inject;
 
@@ -34,11 +35,18 @@ public class DefaultUserService extends AbstractService<User> implements UserSer
 
     @Override
     @Transactional
-    public void registerNewUser(UserCredential credential, UserData data, Role role) {
+    public User createNewUser(UserCredential credential, UserData data, Role role) throws ServiceException {
+        if(credential == null || !credential.isValid()) {
+            throw new ServiceException("Регистрационные данные не корректны");
+        }
+        if(role == null) {
+            throw new ServiceException("Для создания пользователя нужно указать роль");
+        }
         User user = new User(credential,data);
         UserRole userRole = new UserRole(user, role);
-        userRoleRepository.store(userRole);
         userRepository.store(user);
+        userRoleRepository.store(userRole);
+        return user;
     }
 
     @Override
@@ -62,11 +70,16 @@ public class DefaultUserService extends AbstractService<User> implements UserSer
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails userDetails = userRepository.findUserByLogin(username);
+        UserDetails userDetails = getUserByLogin(username);
         if(userDetails == null) {
-            throw  new UsernameNotFoundException("Couldn't find user by username:"+username);
+            throw new UsernameNotFoundException("Couldn't find user by username:"+username);
         }
         return userDetails;
+    }
+
+    @Override
+    public User getUserByLogin(String login) {
+        return userRepository.findUserByLogin(login);
     }
 
     @Override

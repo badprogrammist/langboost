@@ -31,7 +31,7 @@ public class UserData implements Serializable,FileHolder {
     @Column(name = "lastname",nullable = false)
     private String lastname;
     
-    @Column(name = "patronymic",nullable = false)
+    @Column(name = "patronymic")
     private String patronymic;
     
     public UserData() {

@@ -7,10 +7,8 @@ package ru.langboost.domain;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
+
 import org.eclipse.persistence.annotations.Cache;
 
 /**
@@ -22,7 +20,7 @@ import org.eclipse.persistence.annotations.Cache;
 public abstract class AbstractEntity<E extends AbstractEntity> implements Serializable {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private Long id;
 

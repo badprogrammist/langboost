@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.langboost.controllers.AbstractController;
 import ru.langboost.controllers.file.FileHelper;
 import ru.langboost.domain.file.File;
 import ru.langboost.domain.user.Roles;
@@ -21,6 +23,7 @@ import ru.langboost.domain.user.UserData;
 import ru.langboost.security.AuthenticationService;
 import ru.langboost.security.DefaultAuthenticationService;
 import ru.langboost.security.Credentials;
+import ru.langboost.services.ServiceException;
 import ru.langboost.services.registration.DefaultRegistrationService;
 import ru.langboost.services.registration.RegistrationService;
 
@@ -35,7 +38,7 @@ import java.util.Arrays;
  * @author bad
  */
 @Controller
-public class SecurityController {
+public class SecurityController extends AbstractController {
 
     @Inject
     private AuthenticationService authenticationService;
@@ -87,12 +90,14 @@ public class SecurityController {
             String lastname,
             String patronymic,
             String email,
-            String password) {
+            String password,
+            RedirectAttributes redirectAttributes) {
         try {
             UserData userData = createUserData(name, lastname, patronymic, icon);
             Credentials credentials = createCredentials(email, password);
             registrationService.register(credentials, userData, role.name());
-        } catch (SecurityException ex) {
+        } catch (ServiceException ex) {
+            addFlashMessage(ex,redirectAttributes);
             return "redirect:/registration";
         }
         return "redirect:/";
@@ -104,9 +109,11 @@ public class SecurityController {
 
     private UserData createUserData(String name, String lastname, String patronymic, MultipartFile icon) {
         File iconFile = null;
-        try {
-            iconFile = FileHelper.createFile(icon);
-        } catch (IOException ex) {
+        if(icon != null) {
+            try {
+                iconFile = FileHelper.createFile(icon);
+            } catch (IOException ex) {
+            }
         }
         return new UserData(name, lastname, patronymic, iconFile);
     }

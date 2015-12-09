@@ -6,14 +6,14 @@
 package ru.langboost.services.registration;
 
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.langboost.domain.user.Role;
-import ru.langboost.domain.user.UserCredential;
-import ru.langboost.domain.user.UserData;
+import ru.langboost.domain.user.*;
 import ru.langboost.security.Credentials;
-import ru.langboost.services.user.DefaultUserService;
+import ru.langboost.services.ServiceException;
+import ru.langboost.services.profile.ProfileService;
 import ru.langboost.services.user.UserService;
 
 import javax.inject.Inject;
@@ -23,7 +23,6 @@ import javax.inject.Inject;
  * @author bad
  */
 @Service
-@Transactional
 public class DefaultRegistrationService implements RegistrationService {
 
     @Inject
@@ -32,20 +31,27 @@ public class DefaultRegistrationService implements RegistrationService {
     @Inject
     private UserService userService;
 
+    @Inject
+    private ProfileService profileService;
+
     @Override
-    public boolean register(Credentials credentials, UserData userData, String role) {
+    @Transactional
+    public void register(Credentials credentials, UserData userData, String role) throws ServiceException {
         if (credentials.isValid() && role != null && !role.isEmpty()) {
-            UserDetails userDetails = this.userService.loadUserByUsername(credentials.getLogin());
+            UserDetails userDetails = this.userService.getUserByLogin(credentials.getLogin());
             if (userDetails == null) {
                 Role userRole = userService.createRole(role);
                 UserCredential userCredential = createUserCredential(credentials);
-                if (userRole != null) {
-                    userService.registerNewUser(userCredential,userData, userRole);
-                    return true;
+                User user = userService.createNewUser(userCredential, userData, userRole);
+                if(!user.hasRole(Roles.ROLE_ADMIN)) {
+                    profileService.createNewProfile(user);
                 }
+            } else {
+                throw new ServiceException("Такой пользователь уже существует");
             }
+        } else {
+            throw new ServiceException("Данные для регистрации не корректны");
         }
-        return false;
         
     }
     

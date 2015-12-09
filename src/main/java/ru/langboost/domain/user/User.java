@@ -8,17 +8,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.langboost.domain.AbstractEntity;
+import ru.langboost.domain.profile.Profile;
 
 /**
  *
@@ -44,8 +40,11 @@ public class User extends AbstractEntity<User> implements UserDetails {
     @Embedded
     private UserData userData;
     
-    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private Set<UserRole> roles = new HashSet<>();
+
+    @OneToOne(mappedBy = "user",cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private Profile profile;
 
     public User() {
     }
@@ -54,6 +53,17 @@ public class User extends AbstractEntity<User> implements UserDetails {
         this.credential = credential;
         this.userData = data;
     }
+
+
+    public boolean hasRole(Roles role) {
+        for(UserRole userRole : getRoles()) {
+            if(role.name().equals(userRole.getRole().getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public UserCredential getCredential() {
         return credential;
@@ -123,6 +133,14 @@ public class User extends AbstractEntity<User> implements UserDetails {
 
     public void setUserData(UserData userData) {
         this.userData = userData;
+    }
+
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     @Override

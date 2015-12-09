@@ -29,13 +29,17 @@ public class UserRepositoryJPA extends AbstractRepositoryJPA<User> implements Us
     
     @Override
     public User findUserByLogin(String login) {
-        List<User> user;
-        user = entityManager.createNamedQuery("User.findByLogin", User.class)
-                .setParameter("login", login)
-                .getResultList();
-        if (user != null && user.size() == 1) {
-            return user.iterator().next();
-        } else {
+        try {
+            List<User> user;
+            user = entityManager.createNamedQuery("User.findByLogin", User.class)
+                    .setParameter("login", login)
+                    .getResultList();
+            if (user != null && user.size() == 1) {
+                return user.iterator().next();
+            } else {
+                return null;
+            }
+        } catch (Exception ex) {
             return null;
         }
     }

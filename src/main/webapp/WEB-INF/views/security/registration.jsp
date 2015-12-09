@@ -11,7 +11,7 @@
 
     <form role="form" method="post" enctype="multipart/form-data" action="signUp">
 
-        <common:image-uploader styleClass="img-thumbnail" fileName="icon"/>
+        <%--<common:image-uploader styleClass="img-thumbnail" fileName="icon"/>--%>
 
         <label for="role">Я</label>
 
@@ -28,11 +28,6 @@
         <label for="lastname">Фамилия</label>
 
         <input id="lastname" type="text" placeholder="Введите фамилию" name="lastname"
-               required="true"/>
-
-        <label for="patronymic">Отчество</label>
-
-        <input id="patronymic" type="text" placeholder="Введите отчество" name="patronymic"
                required="true"/>
 
         <label for="email">Почта</label>

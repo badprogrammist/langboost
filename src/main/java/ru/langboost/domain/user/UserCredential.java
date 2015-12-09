@@ -15,10 +15,10 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class UserCredential implements Serializable {
 
-    @Column(name = "login",unique = true)
+    @Column(name = "login",unique = true, nullable = false)
     private String login;
     
-    @Column(name="encoded_password")
+    @Column(name="encoded_password", nullable = false)
     private String encodedPassword;
     
     public UserCredential(String login, String password) {
@@ -32,7 +32,10 @@ public class UserCredential implements Serializable {
     public void setEncodedPassword(String encodedPassword) {
         this.encodedPassword = encodedPassword;
     }
-    
+
+    public boolean isValid() {
+        return login != null && !login.isEmpty() && encodedPassword != null && !encodedPassword.isEmpty();
+    }
 
     public String getLogin() {
         return login;

@@ -88,7 +88,7 @@ public class DBConfig {
         properties.put("eclipselink.weaving.lazy", "true");
         properties.put("eclipselink.weaving.internal", "true");
         properties.put("eclipselink.logging.level", "SEVERE");
-        properties.put("eclipselink.query-results-cache.type", "FULL");
+        properties.put("eclipselink.query-results-cache.type", "SOFT");
         properties.put("eclipselink.jdbc.batch-writing", "JDBC");
         properties.put("eclipselink.jdbc.batch-writing.size", "1000");
         return properties;

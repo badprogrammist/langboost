@@ -9,7 +9,8 @@
 
 <sec:authorize access="isAuthenticated()">
     <sec:authentication var="principal" property="principal" />
-    <common:image style="height:30px; width:30px;" styleClass="img-circle" fileId="${principal.userData.icon.id}"/> ${principal.username}
+    <%--<common:image style="height:30px; width:30px;" styleClass="img-circle" fileId="${principal.userData.icon.id}"/>--%>
+     ${principal.username}
 
     <form action="${pageContext.request.contextPath}/logout">
         <button type="submit">Выйти</button>
