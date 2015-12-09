@@ -1,0 +1,78 @@
+/* 
+    Created on : 02.05.2015, 21:20:27
+    Author     : bad
+*/
+
+html, body {
+    color: #34383c;
+    min-height: 300px;
+    width:100%;
+    height:100%;
+}
+
+.full-height {
+    height:100%;
+}
+
+.login-background {
+    background: url(../images/login_back.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.picedit_box {
+    width:100% !important;
+}
+
+.picedit_action_btns {
+    font-size: 5em !important;
+    color: #333 !important;
+}
+
+
+.block {
+    box-sizing: border-box;
+    overflow: auto;
+    background: white;
+    border-radius: 4px;
+    border: 1px solid #dbdee0;
+    height:100%;
+    width: 100%;
+    padding: 10px;
+}
+.block h2 {
+    padding-left: 15px;
+    padding-bottom: 15px;
+}
+
+.img-border {
+    border: 5px solid white;
+    outline: 1px solid #dbdee0;
+}
+
+.top-bar {
+    margin-bottom: 0px;
+}
+
+.master-view-header {
+    height: 300px;
+    background:center center no-repeat scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+.row-space-top-0 {
+    margin-top: 0px;
+}
+
+.row-space-top-4 {
+    margin-top: 25px;
+}
+
+.row-space-bottom-4 {
+    margin-top: 25px;
+}
