@@ -40,7 +40,7 @@ public class User extends AbstractEntity<User> implements UserDetails {
     @Embedded
     private UserData userData;
     
-    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.REMOVE)
     private Set<UserRole> roles = new HashSet<>();
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)

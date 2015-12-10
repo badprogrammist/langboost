@@ -2,8 +2,8 @@ package ru.langboost.repositories.dictionary;
 
 import org.springframework.stereotype.Repository;
 import ru.langboost.domain.profile.Profile;
-import ru.langboost.domain.Dictionary.Dictionary;
-import ru.langboost.domain.Dictionary.DictionaryRepository;
+import ru.langboost.domain.dictionary.Dictionary;
+import ru.langboost.domain.dictionary.DictionaryRepository;
 import ru.langboost.repositories.AbstractRepositoryJPA;
 
 import javax.persistence.EntityManager;

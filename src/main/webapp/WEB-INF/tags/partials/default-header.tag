@@ -12,7 +12,13 @@
     <%--<common:image style="height:30px; width:30px;" styleClass="img-circle" fileId="${principal.userData.icon.id}"/>--%>
      ${principal.username}
     <ul>
-        <li><a href="${pageContext.request.contextPath}/dictionary">Словарь</a></li>
+        <sec:authorize access="hasRole('USER')">
+            <li><a href="${pageContext.request.contextPath}/dictionary">Словарь</a></li>
+        </sec:authorize>
+
+        <sec:authorize access="hasRole('ROLE_AUTHOR')">
+            <li><a href="${pageContext.request.contextPath}/courses">Курсы</a></li>
+        </sec:authorize>
     </ul>
     <form action="${pageContext.request.contextPath}/logout">
         <button type="submit">Выйти</button>

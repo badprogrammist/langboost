@@ -3,14 +3,13 @@ package ru.langboost.services.dictionary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.langboost.domain.profile.Profile;
-import ru.langboost.domain.Dictionary.Word;
-import ru.langboost.domain.Dictionary.WordRepository;
-import ru.langboost.domain.Dictionary.Dictionary;
-import ru.langboost.domain.Dictionary.DictionaryRepository;
+import ru.langboost.domain.dictionary.Word;
+import ru.langboost.domain.dictionary.WordRepository;
+import ru.langboost.domain.dictionary.Dictionary;
+import ru.langboost.domain.dictionary.DictionaryRepository;
 import ru.langboost.services.ServiceException;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,7 +79,7 @@ public class DefaultDictionaryService implements DictionaryService {
     }
 
     @Override
-    public Dictionary get(Long id) {
+    public Dictionary getDictionary(Long id) {
         return dictionaryRepository.get(id);
     }
 

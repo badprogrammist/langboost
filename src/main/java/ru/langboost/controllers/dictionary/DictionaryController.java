@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.langboost.controllers.AbstractController;
 import ru.langboost.controllers.message.Message;
 import ru.langboost.controllers.message.MessageType;
-import ru.langboost.domain.Dictionary.Dictionary;
+import ru.langboost.domain.dictionary.Dictionary;
 import ru.langboost.domain.user.User;
 import ru.langboost.security.AuthenticationService;
 import ru.langboost.services.ServiceException;
@@ -18,8 +18,6 @@ import ru.langboost.services.profile.ProfileService;
 import ru.langboost.services.dictionary.DictionaryService;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Ildar Gafarov on 09.12.15.
@@ -65,7 +63,7 @@ public class DictionaryController extends AbstractController {
     @Secured("ROLE_USER")
     @RequestMapping(value = "/dictionary/{id}", method = RequestMethod.GET)
     public String dictionary(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
-        Dictionary dictionary = dictionaryService.get(id);
+        Dictionary dictionary = dictionaryService.getDictionary(id);
         if(dictionary == null) {
             addFlashMessage(new Message(MessageType.DANGER,"Словарь не найден"), redirectAttributes);
             return "redirect:/dictionary";
@@ -82,7 +80,7 @@ public class DictionaryController extends AbstractController {
             addFlashMessage(new Message(MessageType.DANGER,"Введите слово!"), redirectAttributes);
             return "redirect:/dictionary/"+dictionaryId;
         }
-        Dictionary dictionary = dictionaryService.get(dictionaryId);
+        Dictionary dictionary = dictionaryService.getDictionary(dictionaryId);
         if(dictionary == null) {
             addFlashMessage(new Message(MessageType.DANGER,"Словарь не найден!"), redirectAttributes);
             return "redirect:/dictionary";

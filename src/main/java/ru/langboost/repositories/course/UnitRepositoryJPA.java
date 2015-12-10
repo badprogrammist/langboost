@@ -1,9 +1,11 @@
-package ru.langboost.repositories.dictionary;
+package ru.langboost.repositories.course;
 
 import org.springframework.stereotype.Repository;
-import ru.langboost.domain.dictionary.Dictionary;
-import ru.langboost.domain.dictionary.Word;
-import ru.langboost.domain.dictionary.WordRepository;
+import ru.langboost.domain.course.Course;
+import ru.langboost.domain.course.CourseRepository;
+import ru.langboost.domain.course.Unit;
+import ru.langboost.domain.course.UnitRepository;
+import ru.langboost.domain.user.User;
 import ru.langboost.repositories.AbstractRepositoryJPA;
 
 import javax.persistence.EntityManager;
@@ -15,22 +17,22 @@ import java.util.List;
  * Created by Ildar Gafarov on 09.12.15.
  */
 @Repository
-public class WordRepositoryJPA extends AbstractRepositoryJPA<Word> implements WordRepository {
+public class UnitRepositoryJPA extends AbstractRepositoryJPA<Unit> implements UnitRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public WordRepositoryJPA() {
-        super(Word.class);
+    public UnitRepositoryJPA() {
+        super(Unit.class);
     }
 
-
     @Override
-    public List<Word> findAll(Dictionary dictionary) {
+    public List<Unit> findByCourse(Course course) {
         try {
-            return entityManager.createNamedQuery("Word.findByDictionary", Word.class)
-                    .setParameter("dictionary", dictionary)
+            return entityManager.createNamedQuery("Unit.findByCourse", Unit.class)
+                    .setParameter("course", course)
                     .getResultList();
+
         } catch (Exception ex) {
             return Collections.emptyList();
         }

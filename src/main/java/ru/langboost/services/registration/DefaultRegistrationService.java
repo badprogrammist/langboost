@@ -43,7 +43,7 @@ public class DefaultRegistrationService implements RegistrationService {
                 Role userRole = userService.createRole(role);
                 UserCredential userCredential = createUserCredential(credentials);
                 User user = userService.createNewUser(userCredential, userData, userRole);
-                if(!user.hasRole(Roles.ROLE_ADMIN)) {
+                if(user.hasRole(Roles.ROLE_USER)) {
                     profileService.createNewProfile(user);
                 }
             } else {

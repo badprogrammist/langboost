@@ -2,7 +2,7 @@ package ru.langboost.domain.profile;
 
 import ru.langboost.domain.AbstractEntity;
 import ru.langboost.domain.user.User;
-import ru.langboost.domain.Dictionary.Dictionary;
+import ru.langboost.domain.dictionary.Dictionary;
 
 import javax.persistence.*;
 import java.util.ArrayList;

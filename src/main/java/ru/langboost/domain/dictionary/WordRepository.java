@@ -1,4 +1,4 @@
-package ru.langboost.domain.Dictionary;
+package ru.langboost.domain.dictionary;
 
 import ru.langboost.domain.EntityRepository;
 

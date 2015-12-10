@@ -17,6 +17,7 @@ import ru.langboost.domain.EnumType;
 public enum Roles implements EnumType {
     
     ROLE_USER("Пользователь"),
+    ROLE_AUTHOR("Автор"),
     ROLE_ADMIN("Администратор");
     
     Roles(String title) {
