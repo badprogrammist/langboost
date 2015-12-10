@@ -11,7 +11,9 @@
     <sec:authentication var="principal" property="principal" />
     <%--<common:image style="height:30px; width:30px;" styleClass="img-circle" fileId="${principal.userData.icon.id}"/>--%>
      ${principal.username}
-
+    <ul>
+        <li><a href="${pageContext.request.contextPath}/dictionary">Словарь</a></li>
+    </ul>
     <form action="${pageContext.request.contextPath}/logout">
         <button type="submit">Выйти</button>
     </form>

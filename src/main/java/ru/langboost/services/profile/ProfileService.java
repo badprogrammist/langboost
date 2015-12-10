@@ -10,5 +10,4 @@ import ru.langboost.services.ServiceException;
 public interface ProfileService {
 
     Profile createNewProfile(User user) throws ServiceException;
-
 }

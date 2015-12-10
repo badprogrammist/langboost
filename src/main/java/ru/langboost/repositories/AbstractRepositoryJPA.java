@@ -60,6 +60,10 @@ public abstract class AbstractRepositoryJPA<E extends AbstractEntity> implements
 
     @Override
     public E get(Long id) {
-        return getEntityManager().find(entityClass, id);
+        try {
+            return getEntityManager().find(entityClass, id);
+        } catch (Exception ex) {
+            return null;
+        }
     }
 }
