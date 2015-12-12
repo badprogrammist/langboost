@@ -12,12 +12,10 @@ import ru.langboost.controllers.message.Message;
 import ru.langboost.controllers.message.MessageType;
 import ru.langboost.domain.course.Course;
 import ru.langboost.domain.course.Unit;
-import ru.langboost.domain.dictionary.Dictionary;
 import ru.langboost.domain.user.User;
 import ru.langboost.security.AuthenticationService;
 import ru.langboost.services.ServiceException;
 import ru.langboost.services.course.CourseService;
-import ru.langboost.services.dictionary.DictionaryService;
 import ru.langboost.services.profile.ProfileService;
 
 import javax.inject.Inject;
@@ -36,15 +34,12 @@ public class CourseController extends AbstractController {
     @Inject
     private CourseService courseService;
 
-    @Secured("ROLE_AUTHOR")
+    @Inject
+    private ProfileService profileService;
+
     @RequestMapping(value = "/courses", method = RequestMethod.GET)
-    public String courses(Model model, RedirectAttributes redirectAttributes) {
-        User author = authenticationService.getPrincipal();
-        try {
-            model.addAttribute("courses",courseService.getCourses(author));
-        } catch (ServiceException e) {
-            addFlashMessage(e,redirectAttributes);
-        }
+    public String allCourses(Model model) {
+        model.addAttribute("courses",courseService.getCourses());
         return "course/courses";
     }
 
@@ -60,8 +55,8 @@ public class CourseController extends AbstractController {
     public String editCourse(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         Course course = courseService.getCourse(id);
         if(course == null) {
-            addFlashMessage(new Message(MessageType.DANGER,"Курс не найден"), redirectAttributes);
-            return "redirect:/courses";
+            addFlashMessage(courseNotFound(), redirectAttributes);
+            return gotoCourses();
         }
         User user = authenticationService.getPrincipal();
         if(course.isOwner(user)) {
@@ -69,7 +64,7 @@ public class CourseController extends AbstractController {
             return "course/edit_course";
         } else {
             addFlashMessage(new Message(MessageType.DANGER,"У Вас нет прав для данного действия"), redirectAttributes);
-            return "redirect:/courses";
+            return gotoCourses();
         }
     }
 
@@ -87,7 +82,7 @@ public class CourseController extends AbstractController {
                 addFlashMessage(e, redirectAttributes);
             }
         }
-        return "redirect:/courses";
+        return gotoCourses();
     }
 
     @Secured("ROLE_AUTHOR")
@@ -103,23 +98,32 @@ public class CourseController extends AbstractController {
                 addFlashMessage(new Message(MessageType.SUCCESS,"Курс '"+title+"' успешно обновлен!"),redirectAttributes);
             } catch (ServiceException e) {
                 addFlashMessage(e, redirectAttributes);
-                return "redirect:/courses";
+                return gotoCourses();
             }
         }
-        return "redirect:/course/"+id;
+        return gotoCourse(id);
     }
 
-    @Secured("ROLE_AUTHOR")
     @RequestMapping(value = "/course/{id}", method = RequestMethod.GET)
     public String course(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         Course course = courseService.getCourse(id);
         if(course == null) {
-            addFlashMessage(new Message(MessageType.DANGER,"Курс не найден"), redirectAttributes);
-            return "redirect:/courses";
+            addFlashMessage(courseNotFound(), redirectAttributes);
+            return gotoCourses();
         }
-        User user = authenticationService.getPrincipal();
+        boolean editable = false;
+        boolean attachable = true;
+        if(authenticationService.isAuthenticated()) {
+            User user = authenticationService.getPrincipal();
+            attachable = profileService.isAttachable(user, course);
+            editable = course.isOwner(user);
+        }
+
         model.addAttribute("course",course);
-        model.addAttribute("editable",course.isOwner(user));
+        model.addAttribute("isEditable",editable);
+        model.addAttribute("isAttachable",attachable);
+
+
         try {
             model.addAttribute("units",courseService.getUnits(course));
         } catch (ServiceException e) {
@@ -134,12 +138,12 @@ public class CourseController extends AbstractController {
     public String newUnit(@PathVariable Long courseId, Model model, RedirectAttributes redirectAttributes) {
         Course course = courseService.getCourse(courseId);
         if(course == null) {
-            addFlashMessage(new Message(MessageType.DANGER,"Курс не найден"), redirectAttributes);
-            return "redirect:/courses";
+            addFlashMessage(courseNotFound(), redirectAttributes);
+            return gotoCourses();
         }
         model.addAttribute("course",course);
         model.addAttribute("unit",new Unit());
-        return "course/new_unit";
+        return "unit/new_unit";
     }
 
     @Secured("ROLE_AUTHOR")
@@ -147,13 +151,14 @@ public class CourseController extends AbstractController {
     public String saveUnit(String title, String description, Long courseId, RedirectAttributes redirectAttributes) {
         if(title == null || title.isEmpty()) {
             addFlashMessage(new Message(MessageType.DANGER,"Введите название юнита!"), redirectAttributes);
-            return "redirect:/course/"+courseId;
+            return gotoCourse(courseId);
         }
         Course course = courseService.getCourse(courseId);
         if(course == null) {
-            addFlashMessage(new Message(MessageType.DANGER,"Курс не найден!"), redirectAttributes);
-            return "redirect:/courses";
+            addFlashMessage(courseNotFound(), redirectAttributes);
+            return gotoCourses();
         }
+
         try {
             courseService.createUnit(title, description, course);
             addFlashMessage(new Message(MessageType.SUCCESS,"Юнит '"+title+"' успешно добавлен!"),redirectAttributes);
@@ -161,19 +166,30 @@ public class CourseController extends AbstractController {
             addFlashMessage(e, redirectAttributes);
         }
 
-        return "redirect:/course/"+courseId;
+        return gotoCourse(courseId);
     }
 
-    @Secured("ROLE_AUTHOR")
     @RequestMapping(value = "/unit/{id}", method = RequestMethod.GET)
     public String unit(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
         Unit unit = courseService.getUnit(id);
         if(unit == null) {
             addFlashMessage(new Message(MessageType.DANGER,"Юнит не найден"), redirectAttributes);
-            return "redirect:/courses";
+            return gotoCourses();
         }
         model.addAttribute("unit",unit);
-        return "course/unit";
+        return "unit/unit";
+    }
+
+    public static String gotoCourses() {
+        return "redirect:/courses";
+    }
+
+    public static String gotoCourse(Long id) {
+        return "redirect:/course/"+id;
+    }
+
+    public static Message courseNotFound() {
+        return new Message(MessageType.DANGER,"Курс не найден!");
     }
 
 }

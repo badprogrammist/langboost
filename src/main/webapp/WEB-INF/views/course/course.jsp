@@ -2,24 +2,37 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@taglib prefix="layout" tagdir="/WEB-INF/tags/layouts" %>
-<%@taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
+<%@ taglib prefix="layout" tagdir="/WEB-INF/tags/layouts" %>
+<%@ taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="profile" tagdir="/WEB-INF/tags/profile" %>
+<%@ taglib prefix="h" uri="http://www.springframework.org/tags/form" %>
 
 
 <layout:default title="${course.title}">
 
-    <c:if test="${editable}">
+
         <ul>
-            <li><a href="${pageContext.request.contextPath}/course/edit/${course.id}">Редактировать</a></li>
-            <li><a href="${pageContext.request.contextPath}/unit/new/${course.id}">Добавить юнит</a></li>
+            <c:if test="${isEditable}">
+                <li><a href="${pageContext.request.contextPath}/course/edit/${course.id}">Редактировать</a></li>
+                <li><a href="${pageContext.request.contextPath}/unit/new/${course.id}">Добавить юнит</a></li>
+            </c:if>
+            <c:if test="${isAttachable}">
+                <profile:attach_course_button courseId="${course.id}"/>
+            </c:if>
+
         </ul>
-    </c:if>
+
 
 
     <h2>${course.title}</h2>
 
     <p>
         ${course.description}
+    </p>
+
+    <p>
+        ${course.author.userData.fullName}
     </p>
 
     <p>

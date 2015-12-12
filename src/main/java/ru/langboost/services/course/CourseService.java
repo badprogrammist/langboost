@@ -18,6 +18,7 @@ public interface CourseService {
     Unit createUnit(String title, String description, Course course) throws ServiceException;
     List<Unit> getUnits(Course course) throws ServiceException;
     List<Course> getCourses(User author) throws ServiceException;
+    List<Course> getCourses();
     Course getCourse(Long id);
     Unit getUnit(Long id);
 

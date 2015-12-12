@@ -91,6 +91,11 @@ public class DefaultCourseService implements CourseService {
     }
 
     @Override
+    public List<Course> getCourses() {
+        return courseRepository.getAll();
+    }
+
+    @Override
     public Course getCourse(Long id) {
         return courseRepository.get(id);
     }
