@@ -1,7 +1,7 @@
 package ru.langboost.domain.course;
 
 import ru.langboost.domain.AbstractEntity;
-import ru.langboost.domain.user.User;
+import ru.langboost.domain.Sortable;
 
 import javax.persistence.*;
 
@@ -16,7 +16,7 @@ import javax.persistence.*;
         @NamedQuery(name = "Unit.findByCourse",
                 query = "Select c from Unit c where c.course = :course order by c.orderNumber asc ")
 })
-public class Unit extends AbstractEntity<Unit> {
+public class Unit extends AbstractEntity<Unit> implements Sortable {
 
     @Column(name = "title")
     private String title;
@@ -47,6 +47,7 @@ public class Unit extends AbstractEntity<Unit> {
         this.description = entity.getDescription();
     }
 
+    @Override
     public int getOrderNumber() {
         return orderNumber;
     }

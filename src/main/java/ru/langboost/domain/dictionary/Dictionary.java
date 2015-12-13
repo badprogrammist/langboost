@@ -22,7 +22,7 @@ import java.util.List;
 })
 public class Dictionary extends AbstractEntity<Dictionary> {
 
-    @OneToMany(mappedBy = "dictionary", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "dictionary", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     private List<Word> words = new ArrayList<>();
 
     @ManyToOne

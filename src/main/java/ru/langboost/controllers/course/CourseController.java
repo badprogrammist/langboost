@@ -133,53 +133,6 @@ public class CourseController extends AbstractController {
         return "course/course";
     }
 
-    @Secured("ROLE_AUTHOR")
-    @RequestMapping(value = "/unit/new/{courseId}", method = RequestMethod.GET)
-    public String newUnit(@PathVariable Long courseId, Model model, RedirectAttributes redirectAttributes) {
-        Course course = courseService.getCourse(courseId);
-        if(course == null) {
-            addFlashMessage(courseNotFound(), redirectAttributes);
-            return gotoCourses();
-        }
-        model.addAttribute("course",course);
-        model.addAttribute("unit",new Unit());
-        return "unit/new_unit";
-    }
-
-    @Secured("ROLE_AUTHOR")
-    @RequestMapping(value = "/unit/save", method = RequestMethod.POST)
-    public String saveUnit(String title, String description, Long courseId, RedirectAttributes redirectAttributes) {
-        if(title == null || title.isEmpty()) {
-            addFlashMessage(new Message(MessageType.DANGER,"Введите название юнита!"), redirectAttributes);
-            return gotoCourse(courseId);
-        }
-        Course course = courseService.getCourse(courseId);
-        if(course == null) {
-            addFlashMessage(courseNotFound(), redirectAttributes);
-            return gotoCourses();
-        }
-
-        try {
-            courseService.createUnit(title, description, course);
-            addFlashMessage(new Message(MessageType.SUCCESS,"Юнит '"+title+"' успешно добавлен!"),redirectAttributes);
-        } catch (ServiceException e) {
-            addFlashMessage(e, redirectAttributes);
-        }
-
-        return gotoCourse(courseId);
-    }
-
-    @RequestMapping(value = "/unit/{id}", method = RequestMethod.GET)
-    public String unit(Model model, @PathVariable Long id, RedirectAttributes redirectAttributes) {
-        Unit unit = courseService.getUnit(id);
-        if(unit == null) {
-            addFlashMessage(new Message(MessageType.DANGER,"Юнит не найден"), redirectAttributes);
-            return gotoCourses();
-        }
-        model.addAttribute("unit",unit);
-        return "unit/unit";
-    }
-
     public static String gotoCourses() {
         return "redirect:/courses";
     }

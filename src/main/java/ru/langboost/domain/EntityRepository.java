@@ -12,7 +12,7 @@ import java.util.List;
  * @author bad
  */
 public interface EntityRepository<E extends AbstractEntity> {
-    void store(E entity);
+    E store(E entity);
     E update(E entity);
     void remove(E entity);
     void remove(Long id);
