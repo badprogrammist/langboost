@@ -4,6 +4,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@taglib prefix="layout" tagdir="/WEB-INF/tags/layouts" %>
 <%@taglib prefix="common" tagdir="/WEB-INF/tags/common" %>
+<%@taglib prefix="exercise" tagdir="/WEB-INF/tags/exercise" %>
 
 
 <layout:default title="${unit.title}">
@@ -26,33 +27,12 @@
         </form>
     </c:if>
 
-    <ul>
-        <form action="${pageContext.request.contextPath}/exercise/update/order" method="post">
-            <c:forEach items="${exercises}" var="exercise">
-                <li>
-                    ${exercise.type.title}
-                    <c:if test="${isEditable}">
-                        <select name="order" >
-                            <c:forEach var="exerciseIndex" begin="1" end="${exercises.size()}">
-                                <option ${exerciseIndex == exercise.orderNumber ? ' selected ':''} value="${exercise.id}#${exerciseIndex}">${exerciseIndex}</option>
-                            </c:forEach>
-                        </select>
-                        <a href="${pageContext.request.contextPath}/exercise/edit/${exercise.type.code}/${exercise.id}">Редактировать</a>
-                    </c:if>
-                    <ul>
-                        <c:forEach items="${exercise.rules}" var="exerciseRule">
-                            <li>
-                                ${exerciseRule.rule.title}
-                            </li>
-                        </c:forEach>
-                    </ul>
-                </li>
-            </c:forEach>
-            <input type="hidden" name="unitId" value="${unit.id}">
-            <button type="submit">Сохранить сортировку</button>
-        </form>
-    </ul>
-
+    <c:if test="${isEditable}">
+        <exercise:exercises_list_edit exercisesList="${exercises}"/>
+    </c:if>
+    <c:if test="${!isEditable}">
+        <exercise:exercises_list_view exercisesList="${exercises}"/>
+    </c:if>
 
 
 </layout:default>
