@@ -65,6 +65,11 @@ public class DefaultProfileService extends AbstractService<Profile> implements P
     }
 
     @Override
+    public boolean isAttached(User user, Course course) {
+        return profileCourseRepository.findByCourseAndProfile(course,user.getProfile()) != null;
+    }
+
+    @Override
     public List<ProfileCourse> getProfileCourses(Profile profile) throws ServiceException {
         if(profile == null) {
             throw new ServiceException("Отсутвует профиль");

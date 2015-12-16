@@ -19,5 +19,7 @@ public interface ProfileService {
 
     boolean isAttachable(User user, Course course);
 
+    boolean isAttached(User user, Course course);
+
     List<ProfileCourse> getProfileCourses(Profile profile) throws ServiceException;
 }

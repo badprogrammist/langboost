@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by Ildar Gafarov on 12.12.15.
  */
-@Service("textMatching")
+@Service("tm")
 public class TextMatchingExerciseChecker implements ExerciseChecker<TextMatchingPerformingResult> {
 
     public final static double RULE_WEIGHT = 1.0;

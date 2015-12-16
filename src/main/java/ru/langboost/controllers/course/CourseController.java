@@ -113,15 +113,18 @@ public class CourseController extends AbstractController {
         }
         boolean editable = false;
         boolean attachable = true;
+        boolean attached = false;
         if(authenticationService.isAuthenticated()) {
             User user = authenticationService.getPrincipal();
             attachable = profileService.isAttachable(user, course);
+            attached = profileService.isAttached(user, course);
             editable = course.isOwner(user);
         }
 
         model.addAttribute("course",course);
         model.addAttribute("isEditable",editable);
         model.addAttribute("isAttachable",attachable);
+        model.addAttribute("isAttached",attached);
 
 
         try {

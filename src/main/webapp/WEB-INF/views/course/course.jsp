@@ -11,17 +11,19 @@
 
 <layout:default title="${course.title}">
 
-
+    <c:if test="${isEditable}">
         <ul>
-            <c:if test="${isEditable}">
-                <li><a href="${pageContext.request.contextPath}/course/edit/${course.id}">Редактировать</a></li>
-                <li><a href="${pageContext.request.contextPath}/unit/new/${course.id}">Добавить юнит</a></li>
-            </c:if>
-            <c:if test="${isAttachable}">
-                <profile:attach_course_button courseId="${course.id}"/>
-            </c:if>
-
+            <li><a href="${pageContext.request.contextPath}/course/edit/${course.id}">Редактировать</a></li>
+            <li><a href="${pageContext.request.contextPath}/unit/new/${course.id}">Добавить юнит</a></li>
         </ul>
+    </c:if>
+    <c:if test="${isAttachable}">
+        <profile:attach_course_button courseId="${course.id}"/>
+    </c:if>
+
+    <c:if test="${isAttached}">
+        <profile:play_course_button courseId="${course.id}"/>
+    </c:if>
 
 
 
