@@ -2,7 +2,9 @@ package ru.langboost.services.course;
 
 import ru.langboost.domain.course.Unit;
 import ru.langboost.domain.course.exercise.AbstractExercise;
+import ru.langboost.domain.course.exercise.AbstractExerciseRule;
 import ru.langboost.domain.course.exercise.ExerciseType;
+import ru.langboost.domain.rule.Rule;
 import ru.langboost.services.ServiceException;
 
 import java.util.List;
@@ -15,6 +17,7 @@ public interface ExerciseService {
     AbstractExercise createExercise(ExerciseType type, Unit unit) throws ServiceException;
     List<AbstractExercise> getExercises(Unit unit);
     AbstractExercise getExercise(Long id, ExerciseType type);
-    AbstractExercise updateExercise(AbstractExercise newData,ExerciseType type, Long id) throws ServiceException;
+    AbstractExercise updateExercise(AbstractExercise newData,ExerciseType type,List<Rule> rules, Long id) throws ServiceException;
     void updateOrder(Map<Long,Integer> indexedExercises, Unit unit) throws ServiceException;
+    List<AbstractExerciseRule> getExerciseRules(AbstractExercise exercise);
 }

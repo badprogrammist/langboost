@@ -18,7 +18,7 @@
                 <a href="${pageContext.request.contextPath}/exercise/edit/${exercise.type.code}/${exercise.id}">Редактировать</a>
             </c:if>
             <ul>
-                <c:forEach items="${exercise.rules}" var="exerciseRule">
+                <c:forEach items="${exerciseRules.get(exercise)}" var="exerciseRule">
                     <li>
                             ${exerciseRule.rule.title}
                     </li>

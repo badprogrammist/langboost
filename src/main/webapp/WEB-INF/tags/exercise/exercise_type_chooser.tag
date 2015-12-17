@@ -5,7 +5,7 @@
 
 <%@attribute name="formType" required="true" type="java.lang.String" %>
 <%@attribute name="exerciseType" required="true" type="ru.langboost.domain.course.exercise.ExerciseType" %>
-
+<%@attribute name="exercise" type="ru.langboost.domain.course.exercise.AbstractExercise" %>
 <%@attribute name="performingResult" type="ru.langboost.domain.course.exercise.AbstractPerformingResult" %>
 
 <c:if test="${formType eq 'input'}">
@@ -14,3 +14,8 @@
     </c:if>
 </c:if>
 
+<c:if test="${formType eq 'form'}">
+    <c:if test="${exerciseType.code eq 'tm'}">
+        <exercise:tm_form exercise="${exercise}" />
+    </c:if>
+</c:if>

@@ -12,6 +12,8 @@ import ru.langboost.controllers.message.Message;
 import ru.langboost.controllers.message.MessageType;
 import ru.langboost.domain.course.Course;
 import ru.langboost.domain.course.Unit;
+import ru.langboost.domain.course.exercise.AbstractExercise;
+import ru.langboost.domain.course.exercise.AbstractExerciseRule;
 import ru.langboost.domain.course.exercise.ExerciseType;
 import ru.langboost.domain.user.User;
 import ru.langboost.security.AuthenticationService;
@@ -21,8 +23,7 @@ import ru.langboost.services.course.ExerciseService;
 import ru.langboost.services.profile.ProfileService;
 
 import javax.inject.Inject;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 
 /**
  * Created by Ildar Gafarov on 09.12.15.
@@ -91,10 +92,16 @@ public class UnitController extends AbstractController {
             User user = authenticationService.getPrincipal();
             editable = unit.getCourse().isOwner(user);
         }
+        List<AbstractExercise> exercises = exerciseService.getExercises(unit);
+        Map<AbstractExercise,List<AbstractExerciseRule>> exerciseRules = new HashMap<>();
+        for(AbstractExercise exercise : exercises) {
+            exerciseRules.put(exercise,exerciseService.getExerciseRules(exercise));
+        }
         model.addAttribute("unit",unit);
         model.addAttribute("isEditable",editable);
         model.addAttribute("exerciseTypes", Arrays.asList(ExerciseType.values()));
-        model.addAttribute("exercises", exerciseService.getExercises(unit));
+        model.addAttribute("exercises", exercises);
+        model.addAttribute("exerciseRules", exerciseRules);
         return "unit/unit";
     }
 

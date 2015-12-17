@@ -18,6 +18,7 @@
     </sec:authorize>
     <sec:authorize access="hasAnyRole('ROLE_AUTHOR','ROLE_ADMIN')">
         <li><a href="${pageContext.request.contextPath}/">Главная</a></li>
+        <li><a href="${pageContext.request.contextPath}/rules">Правила</a></li>
     </sec:authorize>
 
     <li><a href="${pageContext.request.contextPath}/courses">Курсы</a></li>

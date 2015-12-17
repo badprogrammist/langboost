@@ -15,14 +15,18 @@ import ru.langboost.domain.course.Unit;
 import ru.langboost.domain.course.exercise.AbstractExercise;
 import ru.langboost.domain.course.exercise.ExerciseType;
 import ru.langboost.domain.course.exercise.TextMatchingExercise;
+import ru.langboost.domain.rule.Rule;
 import ru.langboost.security.AuthenticationService;
 import ru.langboost.services.ServiceException;
 import ru.langboost.services.course.CourseService;
 import ru.langboost.services.course.ExerciseService;
 import ru.langboost.services.profile.ProfileService;
+import ru.langboost.services.rule.RuleService;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -42,6 +46,9 @@ public class ExerciseController extends AbstractController {
 
     @Inject
     private ExerciseService exerciseService;
+
+    @Inject
+    private RuleService ruleService;
 
     @Secured("ROLE_AUTHOR")
     @RequestMapping(value = "/exercise/new", method = RequestMethod.POST)
@@ -81,12 +88,14 @@ public class ExerciseController extends AbstractController {
             return CourseController.gotoCourses();
         }
         model.addAttribute("exercise",exercise);
-        return getViewByType(exerciseType,"edit");
+        model.addAttribute("rules",ruleService.getRules());
+        model.addAttribute("exerciseRules", exerciseService.getExerciseRules(exercise));
+        return "exercise/edit";
     }
 
     @Secured("ROLE_AUTHOR")
     @RequestMapping(value = "/exercise/update/tm", method = RequestMethod.POST)
-    public String updateTextMatchingExercise(String target, String translate, Long exerciseId, RedirectAttributes redirectAttributes) {
+    public String updateTextMatchingExercise(String target, String translate, Long[] rules, Long exerciseId, RedirectAttributes redirectAttributes) {
         if(target == null || target.isEmpty()) {
             addFlashMessage(new Message(MessageType.DANGER,"Не указан текст на целевом языке!"),redirectAttributes);
             return gotoExerciseEdit(exerciseId,ExerciseType.TEXT_MATCHING);
@@ -97,7 +106,11 @@ public class ExerciseController extends AbstractController {
         }
         TextMatchingExercise newData = new TextMatchingExercise(null,target,translate);
         try {
-            AbstractExercise exercise = exerciseService.updateExercise(newData,ExerciseType.TEXT_MATCHING, exerciseId);
+            List<Rule> ruleInstances = new ArrayList<>();
+            for(Long ruleId : rules) {
+                ruleInstances.add(ruleService.getRule(ruleId));
+            }
+            AbstractExercise exercise = exerciseService.updateExercise(newData,ExerciseType.TEXT_MATCHING,ruleInstances, exerciseId);
             addFlashMessage(new Message(MessageType.SUCCESS,"Упражнение успешно обновленно"),redirectAttributes);
             return UnitController.gotoUnit(exercise.getUnit().getId());
         } catch (ServiceException e) {
@@ -136,10 +149,6 @@ public class ExerciseController extends AbstractController {
             addFlashMessage(e, redirectAttributes);
         }
         return UnitController.gotoUnit(unitId);
-    }
-
-    private static String getViewByType(ExerciseType type, String suffix) {
-        return "exercise/"+type.getCode()+"_"+suffix;
     }
 
     public static String gotoExerciseEdit(Long id, ExerciseType type) {
